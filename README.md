@@ -22,3 +22,7 @@ Add the following to VS Code settings:
 
 - `indentSize`: Number of spaces for indentation (1–16)
 - `formatOnSave`: Format on save (works with `editor.formatOnSave`)
+
+## Changelog
+
+See [CHANGELOG.md](CHANGELOG.md) for version history.
