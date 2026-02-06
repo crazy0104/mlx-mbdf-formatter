@@ -123,7 +123,7 @@ function formatLineContent(content: string, state: FormatterState): string {
     return output.replace(/[ \t]+$/, '');
 }
 
-function formatLine(line: string, state: FormatterState): string {
+function formatLine(line: string, state: FormatterState): string | string[] {
     const start = line.replace(/^[ \t]+/, '');
     if (start.length === 0) {
         return '';
@@ -145,15 +145,32 @@ function formatLine(line: string, state: FormatterState): string {
     const bracePos = findUnquotedChar(start, '{', state.inString);
     const closeBracePos = findUnquotedChar(start, '}', state.inString);
 
-    if (bracePos >= 0 && isStructuralOpenBrace(start, bracePos)) {
-        const beforeBrace = start.slice(0, bracePos).trimEnd();
-        const indent = ' '.repeat(state.indentLevel * state.indentSize);
-        if (beforeBrace.length > 0) {
+    if (bracePos >= 0) {
+        const afterBrace = start.slice(bracePos + 1).trimStart();
+        const hasContentAfterBrace = afterBrace.length > 0 && !isOnlyCommentOrWhitespace(afterBrace);
+
+        if (hasContentAfterBrace) {
+            const beforeBrace = start.slice(0, bracePos).trimEnd();
+            const indent = ' '.repeat(state.indentLevel * state.indentSize);
             state.indentLevel += 1;
-            return `${indent}${formatLineContent(beforeBrace, state)} {`;
+            const innerIndent = ' '.repeat(state.indentLevel * state.indentSize);
+            const firstLine = beforeBrace.length > 0
+                ? `${indent}${formatLineContent(beforeBrace, state)} {`
+                : `${indent}{`;
+            const secondLine = `${innerIndent}${formatLineContent(afterBrace, state)}`;
+            return [firstLine, secondLine];
         }
-        state.indentLevel += 1;
-        return `${indent}{`;
+
+        if (isStructuralOpenBrace(start, bracePos)) {
+            const beforeBrace = start.slice(0, bracePos).trimEnd();
+            const indent = ' '.repeat(state.indentLevel * state.indentSize);
+            if (beforeBrace.length > 0) {
+                state.indentLevel += 1;
+                return `${indent}${formatLineContent(beforeBrace, state)} {`;
+            }
+            state.indentLevel += 1;
+            return `${indent}{`;
+        }
     }
 
     if (closeBracePos >= 0 && isStructuralCloseBrace(start)) {
@@ -177,10 +194,11 @@ function formatDocument(text: string, indentSize: number): string {
         inString: false
     };
 
-    return text
+    const results = text
         .split(/\r?\n/)
-        .map((line) => formatLine(line, state))
-        .join('\n');
+        .map((line) => formatLine(line, state));
+    const lines = results.flatMap((r) => (Array.isArray(r) ? r : [r]));
+    return lines.join('\n');
 }
 
 class MBDFFormattingProvider implements vscode.DocumentFormattingEditProvider {

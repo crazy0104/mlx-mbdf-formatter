@@ -1,0 +1,236 @@
+// **************************************************************************
+// *                       MeLiBu description file
+// **************************************************************************
+// * Target:  MLX_Nodes
+// * Project: example
+// * Sourcecode: https://github.com/crazy0104/mlx-mbdf-formatter
+// * Number:
+// * File:    example.MBDF
+// * Author:  Joe Jiang
+// * Company: Crazy0104
+// * Version: V1.0
+// * Date:    Feb/2026
+// **************************************************************************
+
+description_file = "MELIBU";
+bus_protocol_version = "1.1";
+bus_language_version = "1.2";
+bus_speed = 1.000 Mbps;
+
+/* ----------------------------------Nodes------------------------------------- */
+Nodes {
+    Master: Master_Node;
+    Slaves: MLX_Node1; //, MLX_Node2, MLX_Node3;
+}
+
+/* ----------------------------------Signals------------------------------------- */
+Signals {
+    /* [<signal_name>: <signal_size>, <init_value>, <subscribed_by>;] */
+    SigTestD1: 8, 0, Master_Node;
+    SigTestD2: 8, 0, Master_Node;
+    SigTestD3: 8, 0, Master_Node;
+    SigTestD4: 8, 0, Master_Node;
+    SigTestD5: 8, 0, Master_Node;
+    SigTestD6: 8, 0, Master_Node;
+    SigTestD7: 8, 0, Master_Node;
+    SigTestD8: 8, 0, Master_Node;
+    SigTestD9: 8, 0, Master_Node;
+    SigTestD10: 8, 0, Master_Node;
+    SigCommErr: 1, 0, Master_Node;
+}
+
+
+/* ----------------------------------Frames------------------------------------- */
+Frames {
+
+    /* [<frame_name>:<direction>, <function>, <frame_size>, <instruction> {
+    *     [<signal_name>,<signal_offset>;]
+    * }]
+    */   
+    Req_User_Test: M2S, DATA, 0x00, 0x03 {
+
+    }
+
+    User_Test: S2M, LED_EXTENDED, 0x4, NONE {
+        SigTestD1, 0;
+        SigTestD2, 8;
+        SigTestD3, 16;
+        SigTestD4, 24;
+        SigTestD5, 32;
+        SigTestD6, 40;
+        SigTestD7, 48;
+        SigTestD8, 56;
+        SigTestD9, 64;
+        SigTestD10, 72;
+    }
+}
+
+/* ----------------------------------Node_attributes------------------------------------- */
+Node_attributes {
+    MLX_Node1 {
+        bus_protocol = "1.1";
+        configured_NAD = 0x04;
+        product_id = 0x0013, 0x0201, 0x01;          /* <supplier_id>, <function_id> (, <variant>) */
+        response_error = SigCommErr;
+        P2_min = 5 ms;                              /* minimum time which is needed for updating transmit buffer */
+        M2S_ACK = True;
+        supported_frames {
+            Req_User_Test;
+            User_Test;
+        }
+    }
+}
+
+/* ----------------------------------Schedule_tables------------------------------------- */
+Schedule_tables {
+    User_Test
+    {
+        Req_User_Test, MLX_Node1, delay 0ms;
+        User_Test, MLX_Node1, delay 1000ms;
+    }
+
+}
+
+/* ----------------------------------Signal_encoding_types------------------------------------- */
+Signal_encoding_types {
+    /* [<encoding_name>{] */
+    ASCII_CHAR
+    {
+        logical_value, 0, "NUL";
+        logical_value, 1, "SOH";
+        logical_value, 2, "STX";
+        logical_value, 3, "ETX";
+        logical_value, 4, "EOT";
+        logical_value, 5, "ENQ";
+        logical_value, 6, "ACK";
+        logical_value, 7, "BEL";
+        logical_value, 8, "BS";
+        logical_value, 9, "TAB";
+        logical_value, 10, "LF";
+        logical_value, 11, "VT";
+        logical_value, 12, "FF";
+        logical_value, 13, "CR";
+        logical_value, 14, "SO";
+        logical_value, 15, "SI";
+        logical_value, 16, "DLE";
+        logical_value, 17, "DC1";
+        logical_value, 18, "DC2";
+        logical_value, 19, "DC3";
+        logical_value, 20, "DC4";
+        logical_value, 21, "NAK";
+        logical_value, 22, "SYN";
+        logical_value, 23, "ETB";
+        logical_value, 24, "CAN";
+        logical_value, 25, "EM";
+        logical_value, 26, "SUB";
+        logical_value, 27, "ESC";
+        logical_value, 28, "FS";
+        logical_value, 29, "GS";
+        logical_value, 30, "RS";
+        logical_value, 31, "US";
+        logical_value, 32, "SPACE";
+        logical_value, 33, "!";
+        logical_value, 34, "\";
+        logical_value, 35, "#";
+        logical_value, 36, "$";
+        logical_value, 37, "%";
+        logical_value, 38, "&";
+        logical_value, 39, "'";
+        logical_value, 40, "(";
+        logical_value, 41, ")";
+        logical_value, 42, "*";
+        logical_value, 43, "+";
+        logical_value, 44, ", ";
+        logical_value, 45, "-";
+        logical_value, 46, ".";
+        logical_value, 47, "/";
+        logical_value, 48, "0";
+        logical_value, 49, "1";
+        logical_value, 50, "2";
+        logical_value, 51, "3";
+        logical_value, 52, "4";
+        logical_value, 53, "5";
+        logical_value, 54, "6";
+        logical_value, 55, "7";
+        logical_value, 56, "8";
+        logical_value, 57, "9";
+        logical_value, 58, ": ";
+        logical_value, 59, ";";
+        logical_value, 60, "<";
+        logical_value, 61, " = ";
+        logical_value, 62, ">";
+        logical_value, 63, "?";
+        logical_value, 64, "@";
+        logical_value, 65, "A";
+        logical_value, 66, "B";
+        logical_value, 67, "C";
+        logical_value, 68, "D";
+        logical_value, 69, "E";
+        logical_value, 70, "F";
+        logical_value, 71, "G";
+        logical_value, 72, "H";
+        logical_value, 73, "I";
+        logical_value, 74, "J";
+        logical_value, 75, "K";
+        logical_value, 76, "L";
+        logical_value, 77, "M";
+        logical_value, 78, "N";
+        logical_value, 79, "O";
+        logical_value, 80, "P";
+        logical_value, 81, "Q";
+        logical_value, 82, "R";
+        logical_value, 83, "S";
+        logical_value, 84, "T";
+        logical_value, 85, "U";
+        logical_value, 86, "V";
+        logical_value, 87, "W";
+        logical_value, 88, "X";
+        logical_value, 89, "Y";
+        logical_value, 90, "Z";
+        logical_value, 91, "[";
+        logical_value, 92, "\\";
+        logical_value, 93, "]";
+        logical_value, 94, "^";
+        logical_value, 95, "_";
+        logical_value, 96, "`";
+        logical_value, 97, "a";
+        logical_value, 98, "b";
+        logical_value, 99, "c";
+        logical_value, 100, "d";
+        logical_value, 101, "e";
+        logical_value, 102, "f";
+        logical_value, 103, "g";
+        logical_value, 104, "h";
+        logical_value, 105, "i";
+        logical_value, 106, "j";
+        logical_value, 107, "k";
+        logical_value, 108, "l";
+        logical_value, 109, "m";
+        logical_value, 110, "n";
+        logical_value, 111, "o";
+        logical_value, 112, "p";
+        logical_value, 113, "q";
+        logical_value, 114, "r";
+        logical_value, 115, "s";
+        logical_value, 116, "t";
+        logical_value, 117, "u";
+        logical_value, 118, "v";
+        logical_value, 119, "w";
+        logical_value, 120, "x";
+        logical_value, 121, "y";
+        logical_value, 122, "z";
+        logical_value, 123, "{";
+        logical_value, 124, "|";
+        logical_value, 125, "}";
+        logical_value, 126, "~";
+        logical_value, 127, "NRC";
+        logical_value, 128, "DEL";
+        logical_value, 255, "Reserved";
+    }
+}
+
+/* ----------------------------------Signal_representation------------------------------------- */
+Signal_representation {
+    /* [<signal_encoding_type_name>: <signal_name> ([, <signal_name>]) ;] */
+    ASCII_CHAR: SigTestD1, SigTestD2, SigTestD3, SigTestD4, SigTestD5, SigTestD6, SigTestD7, SigTestD8, SigTestD9, SigTestD10;
+}

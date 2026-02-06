@@ -23,7 +23,8 @@
       "patterns": [
         {
           "name": "comment.block.mbdf comment.block",
-          "match": "/\\*.*?\\*/"
+          "begin": "/\\*",
+          "end": "\\*/"
         },
         {
           "name": "comment.line.double-slash.mbdf comment.line.double-slash",
@@ -33,13 +34,27 @@
     },
     "keywords": {
       "patterns": [
+        {   
+            "name": "keyword.definition.mbdf",
+            "match": "\\b(description_file|bus_protocol_version|bus_language_version|bus_speed)\\b"
+
+        },
         {
           "name": "keyword.control.mbdf",
           "match": "\\b(Nodes|Signals|Frames|Node_attributes|Schedule_tables|Signal_encoding_types|Signal_representation)\\b"
         },
         {
+            "name": "keyword.node.mbdf",
+            "match": "\\b(bus_protocol|configured_NAD|product_id|response_error|P2_min|M2S_ACK|supported_frames)\\b"    
+        },
+        {
+            "name": "keyword.special.mbdf",
+            "match": "\\b(Wakeup|AutoAddress|AutoAddressSaveNad|PowerSupply|DigOutput|DigInput)\\b"
+    
+        },
+        {
           "name": "keyword.other.mbdf",
-          "match": "\\b(Master|Slaves|M2S|S2M|DATA|LED_EXTENDED|NONE|Broadcast|delay|ms|s|us)\\b"
+          "match": "\\b(Master|Slaves|M2S|S2M|DATA|LED|LED_EXTENDED|NONE|DATA|Broadcast|delay|ms|s|us|logical_value|physical_value)\\b"
         }
       ]
     },

@@ -2,8 +2,8 @@
   "name": "mbdf-formatter",
   "displayName": "MBDF Formatter",
   "description": "Format MeLiBu Bus Description File (MBDF) files",
-  "version": "1.0.0",
-  "publisher": "lucid-ip-dynamic",
+  "version": "1.0.1",
+  "publisher": "Joe-Jiang",
   "engines": {
     "vscode": "^1.60.0"
   },
@@ -26,8 +26,28 @@
               "comment.block.mbdf"
             ],
             "settings": {
-              "foreground": "#808080"
+              "foreground": "#6A9955"
             }
+          },
+          {
+            "scope": ["keyword.definition.mbdf"],
+            "settings": { "foreground": "#569CD6" }
+          },
+          {
+            "scope": ["keyword.control.mbdf"],
+            "settings": { "foreground": "#ffbb00" }
+          },
+          {
+            "scope": ["keyword.node.mbdf"],
+            "settings": { "foreground": "#4EC9B0" }
+          },
+          {
+            "scope": ["keyword.special.mbdf"],
+            "settings": { "foreground": "#eaff00" }
+          },
+          {
+            "scope": ["keyword.other.mbdf"],
+            "settings": { "foreground": "#9CDCFE" }
           }
         ]
       }

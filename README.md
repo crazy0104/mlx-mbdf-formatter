@@ -1,17 +1,17 @@
-# MBDF Formatter (VSCode Extension)
+# MBDF Formatter (VS Code Extension)
 
-VSCode扩展，用于格式化MeLiBu Bus Description File (MBDF)文件，并提供右侧按钮一键格式化。
+VS Code extension for formatting MeLiBu Bus Description File (MBDF) files, with a one-click format button in the editor toolbar.
 
-## 功能
+## Features
 
-- 右侧状态栏按钮：`MBDF Format`
-- 命令：`Format MBDF Document`
-- 快捷键：`Shift+Alt+F`（仅MBDF文件）
-- 语法高亮（基础）
+- Editor toolbar button: `MBDF Format`
+- Command: `Format MBDF Document`
+- Shortcut: `Shift+Alt+F` (MBDF files only)
+- Basic syntax highlighting
 
-## 配置
+## Configuration
 
-在VSCode设置中加入：
+Add the following to VS Code settings:
 
 ```json
 {
@@ -20,5 +20,5 @@ VSCode扩展，用于格式化MeLiBu Bus Description File (MBDF)文件，并提�
 }
 ```
 
-- `indentSize`: 缩进大小（1-16）
-- `formatOnSave`: 保存时自动格式化（可配合 `editor.formatOnSave`）
+- `indentSize`: Number of spaces for indentation (1–16)
+- `formatOnSave`: Format on save (works with `editor.formatOnSave`)
