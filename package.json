@@ -1,0 +1,119 @@
+{
+  "name": "mbdf-formatter",
+  "displayName": "MBDF Formatter",
+  "description": "Format MeLiBu Bus Description File (MBDF) files",
+  "version": "1.0.0",
+  "publisher": "lucid-ip-dynamic",
+  "engines": {
+    "vscode": "^1.60.0"
+  },
+  "categories": [
+    "Formatters"
+  ],
+  "activationEvents": [
+    "onLanguage:mbdf",
+    "onCommand:mbdf.formatDocument",
+    "onCommand:mbdf.formatSelection"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "configurationDefaults": {
+      "editor.tokenColorCustomizations": {
+        "textMateRules": [
+          {
+            "scope": [
+              "comment.line.double-slash.mbdf",
+              "comment.block.mbdf"
+            ],
+            "settings": {
+              "foreground": "#808080"
+            }
+          }
+        ]
+      }
+    },
+    "languages": [
+      {
+        "id": "mbdf",
+        "aliases": [
+          "MBDF",
+          "mbdf"
+        ],
+        "extensions": [
+          ".MBDF",
+          ".mbdf"
+        ],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "mbdf",
+        "scopeName": "source.mbdf",
+        "path": "./syntaxes/mbdf.tmLanguage.json"
+      }
+    ],
+    "commands": [
+      {
+        "command": "mbdf.formatDocument",
+        "title": "Format MBDF Document",
+        "category": "MBDF"
+      },
+      {
+        "command": "mbdf.formatSelection",
+        "title": "Format MBDF Selection",
+        "category": "MBDF"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "mbdf.formatDocument",
+        "key": "shift+alt+f",
+        "when": "editorTextFocus && editorLangId == 'mbdf'"
+      }
+    ],
+    "menus": {
+      "editor/title": [
+        {
+          "command": "mbdf.formatDocument",
+          "when": "resourceLangId == 'mbdf'",
+          "group": "navigation"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "MBDF Formatter",
+      "properties": {
+        "mbdf.formatter.indentSize": {
+          "type": "number",
+          "default": 4,
+          "minimum": 1,
+          "maximum": 16,
+          "description": "Number of spaces for indentation"
+        },
+        "mbdf.formatter.version": {
+          "type": "string",
+          "default": "1.0.0",
+          "description": "MBDF formatter version label"
+        },
+        "mbdf.formatter.formatOnSave": {
+          "type": "boolean",
+          "default": false,
+          "description": "Format MBDF files on save"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "package": "npx vsce package"
+  },
+  "devDependencies": {
+    "@types/node": "^16.18.0",
+    "@types/vscode": "^1.60.0",
+    "typescript": "^4.9.0",
+    "@vscode/vsce": "^2.21.0"
+  }
+}
