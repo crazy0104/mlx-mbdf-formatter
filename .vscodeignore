@@ -5,3 +5,4 @@ src/**
 **/*.ts
 node_modules/**
 *.vsix
+example/demo.gif

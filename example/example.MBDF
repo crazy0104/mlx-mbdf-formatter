@@ -20,7 +20,8 @@ bus_speed = 1.000 Mbps;
 /* ----------------------------------Nodes------------------------------------- */
 Nodes {
     Master: Master_Node;
-    Slaves: MLX_Node1; //, MLX_Node2, MLX_Node3;
+    Slaves: MLX_Node1;
+    //, MLX_Node2, MLX_Node3;
 }
 
 /* ----------------------------------Signals------------------------------------- */

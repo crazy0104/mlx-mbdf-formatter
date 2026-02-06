@@ -23,6 +23,10 @@ Add the following to VS Code settings:
 - `indentSize`: Number of spaces for indentation (1–16)
 - `formatOnSave`: Format on save (works with `editor.formatOnSave`)
 
+## Demo
+
+![Usage: format MBDF with toolbar button and shortcut](https://github.com/crazy0104/mlx-mbdf-formatter/raw/main/example/demo.gif)
+
 ## Changelog
 
 See [CHANGELOG.md](CHANGELOG.md) for version history.

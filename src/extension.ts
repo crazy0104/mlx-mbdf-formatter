@@ -54,6 +54,36 @@ function findUnquotedChar(line: string, target: string, startInString: boolean):
     return -1;
 }
 
+/** Finds position of unquoted block-comment end (returns index of '*'), or -1. */
+function findUnquotedBlockCommentEnd(line: string, startInString: boolean): number {
+    let inString = startInString;
+    for (let i = 0; i < line.length - 1; i++) {
+        if (line[i] === '"') {
+            inString = !inString;
+        } else if (!inString && line[i] === '*' && line[i + 1] === '/') {
+            return i;
+        }
+    }
+    return -1;
+}
+
+/** Splits line by unquoted ';', returns segments (without the ';'). */
+function splitByUnquotedSemicolon(line: string): string[] {
+    const result: string[] = [];
+    let inString = false;
+    let start = 0;
+    for (let i = 0; i < line.length; i++) {
+        if (line[i] === '"') {
+            inString = !inString;
+        } else if (!inString && line[i] === ';') {
+            result.push(line.slice(start, i));
+            start = i + 1;
+        }
+    }
+    result.push(line.slice(start));
+    return result;
+}
+
 function formatLineContent(content: string, state: FormatterState): string {
     let output = '';
     let inSpace = false;
@@ -129,6 +159,25 @@ function formatLine(line: string, state: FormatterState): string | string[] {
         return '';
     }
 
+    const indent = ' '.repeat(state.indentLevel * state.indentSize);
+
+    const blockCommentEndPos = findUnquotedBlockCommentEnd(start, state.inString);
+    if (blockCommentEndPos >= 0) {
+        const afterComment = start.slice(blockCommentEndPos + 2).trimStart();
+        if (afterComment.length > 0) {
+            state.inBlockComment = false;
+            const commentPart = start.slice(0, blockCommentEndPos + 2);
+            const statementParts = splitByUnquotedSemicolon(afterComment)
+                .map((s) => s.trim())
+                .filter((s) => s.length > 0);
+            const commentLine = `${indent}${commentPart}`;
+            const statementLines = statementParts.map((seg) =>
+                `${indent}${formatLineContent(seg, state)};`
+            );
+            return [commentLine, ...statementLines];
+        }
+    }
+
     const hasBlockStart = isBlockCommentStart(start);
     const hasBlockEnd = isBlockCommentEnd(start);
     if (hasBlockStart) {
@@ -139,7 +188,12 @@ function formatLine(line: string, state: FormatterState): string | string[] {
     }
 
     if (state.inBlockComment || isCommentLine(start) || hasBlockStart || hasBlockEnd) {
-        return `${' '.repeat(state.indentLevel * state.indentSize)}${start}`;
+        return `${indent}${start}`;
+    }
+
+    const statementParts = splitByUnquotedSemicolon(start).map((s) => s.trim()).filter((s) => s.length > 0);
+    if (statementParts.length > 1) {
+        return statementParts.map((seg) => `${indent}${formatLineContent(seg, state)};`);
     }
 
     const bracePos = findUnquotedChar(start, '{', state.inString);
@@ -183,7 +237,7 @@ function formatLine(line: string, state: FormatterState): string | string[] {
         return `${indent}}`;
     }
 
-    return `${' '.repeat(state.indentLevel * state.indentSize)}${formatLineContent(start, state)}`;
+    return `${indent}${formatLineContent(start, state)}`;
 }
 
 function formatDocument(text: string, indentSize: number): string {
