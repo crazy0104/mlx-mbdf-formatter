@@ -1,8 +1,9 @@
 {
   "name": "mbdf-formatter",
   "displayName": "MBDF Formatter",
+  "icon": "images/xiaobai.png",
   "description": "Format MeLiBu Bus Description File (MBDF) files",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "publisher": "Joe-Jiang",
   "repository": "https://github.com/crazy0104/mlx-mbdf-formatter",
   "engines": {

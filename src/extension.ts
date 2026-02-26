@@ -191,11 +191,6 @@ function formatLine(line: string, state: FormatterState): string | string[] {
         return `${indent}${start}`;
     }
 
-    const statementParts = splitByUnquotedSemicolon(start).map((s) => s.trim()).filter((s) => s.length > 0);
-    if (statementParts.length > 1) {
-        return statementParts.map((seg) => `${indent}${formatLineContent(seg, state)};`);
-    }
-
     const bracePos = findUnquotedChar(start, '{', state.inString);
     const closeBracePos = findUnquotedChar(start, '}', state.inString);
 
@@ -205,26 +200,43 @@ function formatLine(line: string, state: FormatterState): string | string[] {
 
         if (hasContentAfterBrace) {
             const beforeBrace = start.slice(0, bracePos).trimEnd();
-            const indent = ' '.repeat(state.indentLevel * state.indentSize);
+            const currentIndent = ' '.repeat(state.indentLevel * state.indentSize);
             state.indentLevel += 1;
             const innerIndent = ' '.repeat(state.indentLevel * state.indentSize);
-            const firstLine = beforeBrace.length > 0
-                ? `${indent}${formatLineContent(beforeBrace, state)} {`
-                : `${indent}{`;
-            const secondLine = `${innerIndent}${formatLineContent(afterBrace, state)}`;
-            return [firstLine, secondLine];
+            const firstLine =
+                beforeBrace.length > 0
+                    ? `${currentIndent}${formatLineContent(beforeBrace, state)} {`
+                    : `${currentIndent}{`;
+            const segments = splitByUnquotedSemicolon(afterBrace)
+                .map((s) => s.trim())
+                .filter((s) => s.length > 0);
+            const restLines: string[] = [];
+            for (const seg of segments) {
+                if (seg === '}') {
+                    state.indentLevel = Math.max(0, state.indentLevel - 1);
+                    restLines.push(' '.repeat(state.indentLevel * state.indentSize) + '}');
+                } else {
+                    restLines.push(`${innerIndent}${formatLineContent(seg, state)};`);
+                }
+            }
+            return [firstLine, ...restLines];
         }
 
         if (isStructuralOpenBrace(start, bracePos)) {
             const beforeBrace = start.slice(0, bracePos).trimEnd();
-            const indent = ' '.repeat(state.indentLevel * state.indentSize);
+            const currentIndent = ' '.repeat(state.indentLevel * state.indentSize);
             if (beforeBrace.length > 0) {
                 state.indentLevel += 1;
-                return `${indent}${formatLineContent(beforeBrace, state)} {`;
+                return `${currentIndent}${formatLineContent(beforeBrace, state)} {`;
             }
             state.indentLevel += 1;
-            return `${indent}{`;
+            return `${currentIndent}{`;
         }
+    }
+
+    const statementParts = splitByUnquotedSemicolon(start).map((s) => s.trim()).filter((s) => s.length > 0);
+    if (statementParts.length > 1) {
+        return statementParts.map((seg) => `${indent}${formatLineContent(seg, state)};`);
     }
 
     if (closeBracePos >= 0 && isStructuralCloseBrace(start)) {
